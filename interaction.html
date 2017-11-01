@@ -1,3 +1,31 @@
+
+Skip to content
+This repository
+
+    Pull requests
+    Issues
+    Marketplace
+    Explore
+
+    @alexy4744
+
+0
+0
+
+    0
+
+alexy4744/p5js
+Code
+Issues 0
+Pull requests 0
+Projects 0
+Wiki
+Insights
+Settings
+p5js/interaction.html
+2936451 2 hours ago
+@alexy4744 alexy4744 Create interaction.html
+117 lines (93 sloc) 3.15 KB
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 
@@ -8,33 +36,31 @@
     <script>
         var diameter1 = 100
         var diameter2 = 40
-
+        
         var angle = 0
         var centerX = 20
-
+        
         function setup() {
             createCanvas(800, 800)
             background(0)
         }
-
         function mouseMoved() {
             // logs
             console.log('angle: ' + angle)
             console.log('centerX: ' + centerX)
             console.log('diameter1: ' + diameter1)
             console.log('keyCode: ' + keyCode)
-
+            
             //set fill and stroke
             strokeWeight(3)
             stroke(random(255), random(205), random(100))
             fill(0, random(125))
-
+            
             translate(width / 2, height / 2); //move to center
             angle += .25
             rotate(angle); //rotate at increasing angle
-
             ellipse(centerX, diameter1, diameter1); //rotate radius,diameter
-
+            
             //prevent ellipses > canvas
             if (centerX > width / 3.5) {
                 centerX--
@@ -44,7 +70,6 @@
                 centerX++
                 angle++
             }
-
             //gradually increase ellipse diameter to 150
             if (diameter1 > 150) {
                 diameter1--
@@ -55,22 +80,22 @@
         }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-
+       
         function mouseDragged() {
             console.log('mouseX: ' + mouseX)
             console.log('mouseY: ' + mouseY)
-
+            
             // reset to default values
             centerX = 0
             diameter1 = 100
-
+            
             // rect trail
             background(mouseX / 2, mouseY / 2, 0, 25)
             strokeWeight(7)
             stroke(0)
             fill(mouseX / 2, mouseY / 2, 0)
             ellipse(mouseX, mouseY, diameter2, diameter2)
-
+            
             // coords display
             textSize(15)
             textAlign(CENTER)
@@ -78,9 +103,9 @@
             text("X: " + round(mouseX), mouseX, mouseY - 50)
             text("Y: " + round(mouseY), mouseX, mouseY - 30)
         }
-
+        
 /////////////////////////////////////////////////////////////////////////////////////////////
-
+       
         function keyPressed() {
             // change bgcolor white/black
             if (keyCode == 87) { // w
@@ -88,7 +113,6 @@
                 diameter1 = -90
                 background(255)
             }
-
             if (keyCode == 66) { // b
                 centerX = 0
                 diameter1 = 100
@@ -114,3 +138,5 @@
 
 
 </html>
+
+
