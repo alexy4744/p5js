@@ -47,6 +47,8 @@
                 ballY = ballY + ballSpeedY;
             }
         }
+        
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\
 
         function checkCollide() {
             if (ballX < 0 || ballX > width) { // check whether the x coords of ball are within canvas size
@@ -72,6 +74,8 @@
                 }
             }
         }
+        
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\
 
         function drawBall() {
             if (!paused) {
@@ -124,6 +128,8 @@
             }
         }
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\
+
         function randColor() {
             // specify certain colors in an array so color can be picked randomly if ball collides.
             chooseColor = []
@@ -136,6 +142,8 @@
             // set ballColor to pick a random in the array index of colors
             ballColor = chooseColor[round(random(0, 4))]
         }
+        
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\
 
         function RIP() {
             if (lives > 1) {
@@ -157,6 +165,8 @@
                 noLoop()
             }
         }
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\
 
         function keyPressed() {
             // change between pause true/false if 'p' is pressed
