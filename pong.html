@@ -10,11 +10,11 @@
         var ballSpeedX = 5;
         var ballSpeedY = 5;
         var paddleHeight = 30;
-        var score = 0
-        var time = 0
-        var ballColor
-        var lives = 3
-        var paused = false
+        var score = 0;
+        var time = 0;
+        var ballColor;
+        var lives = 3;
+        var paused = false;
 
         function setup() {
             createCanvas(800, 600);
@@ -29,9 +29,8 @@
             textAlign(CENTER)
             textSize(17.5)
             background(0, 155);
-            drawScore(width / 2, 50);
-            drawTime(width / 2, 25);
-            drawSpeed(width / 2, 75);
+            drawScore(width / 2, 25);
+            drawSpeed(width / 2, 50);
             drawLives();
             drawPaddle();
             drawBall();
@@ -47,8 +46,6 @@
                 ballY = ballY + ballSpeedY;
             }
         }
-        
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\
 
         function checkCollide() {
             if (ballX < 0 || ballX > width) { // check whether the x coords of ball are within canvas size
@@ -64,6 +61,7 @@
                     console.log(ballSpeedY)
                     // map ballX to certain range so ball bounces left/right/middle depending where it collides
                     ballSpeedX = map(ballX, mouseX, mouseX + 200, -5, 5) 
+                    // negate direction of ballspeedY at a random speed between 0.75-1.05
                     ballSpeedY = ballSpeedY * -1;
                     ballSpeedY -= random(0.75, 1.05)
                     score++
@@ -74,8 +72,6 @@
                 }
             }
         }
-        
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\
 
         function drawBall() {
             if (!paused) {
@@ -102,9 +98,9 @@
                 ellipseMode(CENTER)
                 noFill()
                 stroke(ballColor)
-                ellipse(750, 45, 75, 75)
-                textSize(60)
-                text(lives, 750, 63.5)
+                ellipse(750, 32, 50, 50)
+                textSize(40)
+                text(lives, 750, 45)
             }
         }
 
@@ -113,25 +109,15 @@
             text("Score: " + score, x, y)
         }
 
-        function drawTime(x, y) {
-            if (!paused) {
-                fill(255)
-                time = round(millis() / 1000) // convert ms to secs 
-                text("Time: " + time, x, y)
-            }
-        }
-
         function drawSpeed(x, y) {
             if (!paused) {
-                // nearrest 2 places and show the absolute value of speed so it is not negative
+                // show the absolute value of speed rounded to the nearest 2 digits so it is not negative
                 text("Speed: " + round(abs(ballSpeedY * 100)) / 100, x, y)
             }
         }
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\
-
         function randColor() {
-            // specify certain colors in an array so color can be picked randomly if ball collides.
+            // specify the only possible colors for the game to pick
             chooseColor = []
             chooseColor[0] = color(100, 255, 35); // green
             chooseColor[1] = color(0, 255, 255); // cyan
@@ -139,11 +125,9 @@
             chooseColor[3] = color(0, 0, 255); // purple
             chooseColor[4] = color(223, 9, 9); // red
             
-            // set ballColor to pick a random in the array index of colors
+            // set ballColor to pick a random color from array
             ballColor = chooseColor[round(random(0, 4))]
         }
-        
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\
 
         function RIP() {
             if (lives > 1) {
@@ -166,16 +150,14 @@
             }
         }
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\
-
         function keyPressed() {
             // change between pause true/false if 'p' is pressed
-            if (keyCode == 80) {
+            if (keyCode == 80) { // key == p
                 paused = !paused
             }
             
             // reassign values with default values and recall functions
-            if (keyCode == 13) {
+            if (keyCode == 13) { // key == enter
                 score = 0
                 lives = 3
                 setup()
@@ -205,6 +187,5 @@
         });
     </script>
 </body>
-
 
 </html>
