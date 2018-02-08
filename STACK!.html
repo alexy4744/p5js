@@ -31,7 +31,6 @@
             /* using orthographic projection to make all boxes appear to have the same size
                left, right, bottom, top, near, far */
             ortho(-width / 2, width / 2, -height / 2, height / 2.5, -height * 2, height * 4);
-
         }
 
         function draw() {
@@ -66,10 +65,10 @@
 
             // object rotations/translations
             if (keyIsPressed) {
-                if (keyCode == 37) rY += 0.1 // left arrow rotates boxes counter clockwise
-                if (keyCode == 39) rY -= 0.1 // right arrow rotates boxes clockwise
-                if (keyCode == 38) down-- // up arrow move boxes up
-                    if (keyCode == 40) down++ // down arrow moves boxes down
+                if (keyCode == 52) rY += 0.1 // left arrow rotates boxes counter clockwise
+                if (keyCode == 54) rY -= 0.1 // right arrow rotates boxes clockwise
+                if (keyCode == 56) down-- // up arrow move boxes up
+                if (keyCode == 50) down++ // down arrow moves boxes down
             }
             if (keyCode == 46) rY = 183 // del to reset rotation to default
         }
