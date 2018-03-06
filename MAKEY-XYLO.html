@@ -33,7 +33,6 @@
         var keyHighlightE6
         var keyHighlightF6
         var keyHighlightG6
-        var noteText = ["c5", "d5", "e5", "f5", "g5", "a5", "b5", "c6", "d6", "f6", "g6"]
 
         function preload() {
             // 33.3 kb & 2 secs, ~400kb 
@@ -52,7 +51,7 @@
 
             // create drop down menu with p5.dom
             menu = createSelect()
-            menu.position(20, 7526) // y position set to 7526 as the code comes before canvas for some reason
+            menu.position(20, 7516) // y position set to 7526 as the code comes before canvas for some reason
             menu.option("8 keys")
             menu.option("12 keys")
         }
