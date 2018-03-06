@@ -52,7 +52,7 @@
 
             // create drop down menu with p5.dom
             menu = createSelect()
-            menu.position(20, 750)
+            menu.position(20, 7526) // y position set to 7526 as the code comes before canvas for some reason
             menu.option("8 keys")
             menu.option("12 keys")
         }
@@ -364,10 +364,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script>
         $(window).bind("load", function() {
-            $('#code').after($('#defaultCanvas0').remove());
+            $('#code').before($('#defaultCanvas0').remove());
         });
     </script>
 </body>
-
 
 </html>
