@@ -2,140 +2,151 @@
 <html>
 
 <head>
-    <title>SPEED STACKER!</title>
+    <title>SPEED STACKER</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.js">
     </script>
 
     <script>
-        var boxes = []
-        var colors = []
-        var down = 125
-        var pressed = true
-        var rX = 100.3
-        var rY = 1
-        var gameover = false
-        var minSpeed = 5
-        var maxSpeed = 13
-        var r // initial random red
-        var g // inital random green
-        var b // inital random blue
+        var boxes = [], // array that stores each instance of a newly created box
+            colors = [], // array to store each color for the color scheme
+            prevX = [], // x coordinate of previous boxes
+            prevW = []; // width of previous boxes
+
+        var yPos = 125, // inital y position of the boxes
+            rX = 100.3, // inital x rotation of the boxes
+            rY = 1, // inital y rotation of the boxes
+            minSpeed = 5, // initial boundaries of random speed
+            maxSpeed = 13;
+
+        var pressed = true, // boolean to check whether SHIFT/ENTER is already pressed
+            gameover = false; // boolean to check whether the player has lost
 
         function setup() {
             createCanvas(600, 900, WEBGL)
             setAttributes('antialias', true); // use AA to help soften jagged edges/aliasing
-            randColor()
-            r = colors[1]
-            g = colors[1]
-            b = colors[1]
+            colors.push(color('#2A363B'), color('#E84A5F'), color('#FF847C'), color('#FECEA8'), color('#99B89B'))
 
             /* using orthographic projection to make all boxes appear to have the same size
-               left, right, bottom, top, near, far */
+             * left, right, bottom, top, near, far 
+             */
             ortho(-width / 2, width / 2, -height / 2, height / 2.5, -height * 2, height * 4);
         }
 
         function draw() {
-            // -width/2,-height/2 -------- width/2,-height/2
-            //                |            |
-            //                |     0,0    |
-            //                |            |
-            // -width/2,height/2--------width/2,height/2
-
-            background(0)
-            down = constrain(down, -315 + boxes.length * 20, 395) // prevent boxes from exceeding or lower than canvas height
-            translate(0, down, 100)
+            /* -width/2,-height/2 -------- width/2,-height/2
+             *                |            |
+             *                |     0,0    |
+             *                |            |
+             * -width/2,height/2--------width/2,height/2
+             */
+            yPos = constrain(yPos, -315 + boxes.length * 20, 395) // prevent boxes from exceeding or lower than canvas height
+            translate(0, yPos, 0)
             rotateX(rX)
             rotateY(rY)
-            fill(r, g, b)
+            background(0)
+            fill(color('#2A363B'))
             stroke(0)
-            strokeWeight(2.35)
-            box(150, 20, 150) // inital box
+            strokeWeight(2)
+            box(150, 20, 150) // initial box (width, height, depth)
+
+            // always check if there are less than 2 colors in the array so that it can 
+            if (colors.length < 2) {
+                // push the original colors back into the array
+                colors.push(color('#2A363B'), color('#E84A5F'), color('#FF847C'), color('#FECEA8'), color('#99B89B'))
+            }
 
             for (var i = 0; i < boxes.length; i++) {
                 boxes[i].move()
                 boxes[i].display()
             }
 
-            if (gameover == true) {
-                boxes.splice(0, boxes.length) // remove all boxes from array
-                minSpeed = 5 // reset speed to default
+            if (gameover) {
+                boxes.length = 0 // remove all instances of boxes from array 
+                minSpeed = 5 // reset speed boundaries to default
                 maxSpeed = 13
-                down = 125 // reset location of boxes
-                gameover = false // restart game by allowing new boxes to be pushed
+                prevX = []
+                prevW = []
+                yPos = 125 // reset y position of the boxes
+                colors = [color('#2A363B'), color('#E84A5F'), color('#FF847C'), color('#FECEA8'), color('#99B89B')] // overwrite the array to reset color scheme
+                return gameover = false // restart game by allowing new boxes to be pushed
             }
 
-            // object rotations/translations
-            if (keyIsPressed) {
-                if (keyCode == 52) rY += 0.1 // left arrow rotates boxes counter clockwise
-                if (keyCode == 54) rY -= 0.1 // right arrow rotates boxes clockwise
-                if (keyCode == 56) down-- // up arrow move boxes up
-                if (keyCode == 50) down++ // down arrow moves boxes down
-            }
-            if (keyCode == 46) rY = 183 // del to reset rotation to default
-        }
-
-        function randColor() {
-            for (var i = 0; i < 2; i++) {
-                var newColor = color(random(255), random(255), random(255))
-                colors.push(newColor);
-            }
+            // keys to alter rotation/position
+            if (keyCode === 52) return rY += 0.1 // left arrow rotates boxes counter clockwise
+            else if (keyCode === 54) return rY -= 0.1 // right arrow rotates boxes clockwise
+            else if (keyCode === 56) return yPos-- // up arrow move boxes up
+            else if (keyCode === 50) return yPos++ // down arrow moves boxes down
+            else if (keyCode === 46) return rY = 183 // del to reset rotation to default
         }
 
         function keyPressed() {
-            if (pressed && !gameover) {
-                if (keyCode == 13) {
-                    minSpeed += 0.5 // gradually increase the boundaries of random speed
-                    maxSpeed += 0.5
-                    boxes.push(new Box())
-                    colors.splice(0, colors.length)
-                    randColor()
-                    pressed = !pressed // set to false to prevent multiple executions
-                }
+            if (pressed && !gameover && keyCode === 13) {
+                minSpeed += 0.5 // gradually increase the boundaries of random speed
+                maxSpeed += 0.5 // each time ENTER is pressed and player has not lost yet
+                boxes.push(new Box())
+                return pressed = !pressed // set to false to prevent multiple executions
             }
 
-            // prevent multiple boxes being pushed per key press
-            if (keyCode == 16) pressed = true
+            if (keyCode === 16) {
+                return pressed = true // prevent multiple boxes being pushed each time SHIFT is pressed
+            }
         }
 
         function Box() {
-            this.x = -620
-            this.xSpeed = Math.ceil(random(minSpeed, maxSpeed))
-            this.y = -20
-            this.z = 0
-            this.r = colors[0] // each new box follows the same color scheme
-            this.b = colors[0]
-            this.g = colors[0]
-            this.w = round(random(35, 100))
-            this.placed = true
+            this.x = -620 // inital x coord of this box
+            this.y = -20 // inital y coord of this box
+            this.z = 0 // inital z coord of the boxes
+            this.xSpeed = Math.ceil(random(minSpeed, maxSpeed)) // always round the random speed to the next number
+            this.w = round(random(35, 100)) // randomize the width of each box created
+            this.placed = true // boolean to check whether the player has already placed this box
+            this.color = colors[1] // start with color index 1 as index 0 is already used for the inital box
 
             this.move = function() {
+                // testing
+                // fill(255)
+                // ellipse(this.x+this.w/2, 120, 20,20) // right
+                // rectMode(CENTER)
+                // rect(this.x , 120, 20 ,20) // center
+                // ellipse(this.x-this.w/2, 120, 20,20) // left
+                
                 this.x += this.xSpeed
 
                 // if block is not placed
-                if (keyCode != 16 && this.x > width * 2) this.x = -620 // place the box back to the beginning 
-
-                /* this part of code makes no sense, as the current width of the box * 2 
-                   doesn't check location for the previous box
-                   so therefore sometimes the box places on top of nothing with widths < ~50 */
+                if (keyCode !== 16 && this.x > width * 2) return this.x = -620 // place the box back to the beginning 
+                
+                /*  _____________
+                 * |             |
+                 * |             | // this.x == center of the box
+                 * |     box     | // this.x - this.w/2 to get the left boundary
+                 * |             | // this.x + this.w/2 to get the right boundary
+                 * |_____________|
+                */
+                
+                // this part makes no sense as this does not account for previous x and width values
+                // but it works ok temporarily until i fix it
                 if (keyCode == 16 && (this.x + this.w < 0)) gameover = true //if user places box before stack
-                else if (keyCode == 16 && (this.x + this.w > this.w * 2)) gameover = true // if user places box past stack 
-
+                else if (keyCode == 16 && (this.x + this.w > this.w * 2)) gameover = true // if user places box past stack
+                
                 // place box when SHIFT is pressed
-                if (keyCode == 16) {
-                    if (this.placed == true) {
-                        this.xSpeed = 0
-                        this.r = colors[1] // alternate between the different colors in array
-                        this.g = colors[1]
-                        this.b = colors[1]
-                        down += 12 // move all blocks down by increments of 12 pixels each time user places box
-                        this.placed = false // set back to false to prevent multiple executions of the same code
-                    }
+                if (keyCode === 16 && this.placed === true) {
+                    prevX.push(this.x) // LEFT
+                    prevW.push(this.w) // RIGHT
+                    this.xSpeed = 0 // stop the box from moving by setting the speed to 0
+                    colors.shift() // delete the first item from the array to get the next color
+                    yPos += 12 // move the boxes down by increments of 12 pixels
+                    return this.placed = false // set back to false to prevent multiple executions of the same code
+                    //testing
+                    // console.log(`this.x: ` + this.x)
+                    // console.log(`this.w: ` + this.w) 
+                    // console.log(`Previous X: `+prevX[prevX.length-2])
+                    // console.log(`Previous W: ` + prevW[prevW.length-2])
                 }
             }
 
             this.display = function() {
-                fill(this.r, this.g, this.b)
+                fill(this.color) 
                 translate(this.x, this.y, this.z)
-                box(this.w, 20, 150)
+                return box(this.w, 20, 150)
             }
         }
     </script>
@@ -154,4 +165,4 @@
     </script>
 </body>
 
-</html> 
+</html>
