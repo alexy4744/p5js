@@ -2,369 +2,110 @@
 <html>
 
 <head>
-    <title>MAKEY XYLO</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/addons/p5.sound.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/addons/p5.dom.js"></script>
+  <title>MAKEY XYLO</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/addons/p5.sound.js"></script>
 
-    <script>
-        var menu
-        var a5
-        var b5
-        var c5
-        var c6
-        var d5
-        var d6
-        var e5
-        var e6
-        var f5
-        var f6
-        var g5
-        var g6
-        var keyHighlightC5
-        var keyHighlightD5
-        var keyHighlightE5
-        var keyHighlightF5
-        var keyHighlightG5
-        var keyHighlightA5
-        var keyHighlightB5
-        var keyHighlightC6
-        var keyHighlightD6
-        var keyHighlightE6
-        var keyHighlightF6
-        var keyHighlightG6
+  <script>
+    const keys = {
+      87: {
+        note: "a5",
+        sound: 'https://www.dl.dropboxusercontent.com/s/xhqseodrgfdt0i2/a5.mp3',
+        currentColor: [255, 0, 0]
+      },
+      65: {
+        note: "b5",
+        sound: 'https://www.dl.dropboxusercontent.com/s/d2g6bsst7ywg1lo/b5.mp3',
+        currentColor: [255, 0, 0]
+      },
+      83: {
+        note: "c5",
+        sound: 'https://www.dl.dropboxusercontent.com/s/ccaswpookmdk3n4/c5.mp3',
+        currentColor: [255, 0, 0]
+      },
+      68: {
+        note: "c6",
+        sound: 'https://www.dl.dropboxusercontent.com/s/ih2tk20jhui85x8/c6.mp3',
+        currentColor: [255, 0, 0]
+      },
+      32: {
+        note: "d5",
+        sound: 'https://www.dl.dropboxusercontent.com/s/scxp2howqhpkcg6/d5.mp3',
+        currentColor: [255, 0, 0]
+      },
+      39: {
+        note: "e5",
+        sound: 'https://www.dl.dropboxusercontent.com/s/ie7vbqzllol7k1z/e5.mp3',
+        currentColor: [255, 0, 0]
+      },
+      40: {
+        note: "e6",
+        sound: 'https://www.dl.dropboxusercontent.com/s/ds6ggo0t9nipx1e/e6.mp3',
+        currentColor: [255, 0, 0]
+      },
+      38: {
+        note: "f5",
+        sound: 'https://www.dl.dropboxusercontent.com/s/0f6ob8f07wtbdoz/f5.mp3',
+        currentColor: [255, 0, 0]
+      },
+      70: {
+        note: "f6",
+        sound: 'https://www.dl.dropboxusercontent.com/s/jed4zmy277hp1c6/f6.mp3',
+        currentColor: [255, 0, 0]
+      },
+      71: {
+        note: "g5",
+        sound: 'https://www.dl.dropboxusercontent.com/s/8xngpox41qa102g/g5.mp3',
+        currentColor: [255, 0, 0]
+      }
+    };
 
-        function preload() {
-            // 33.3 kb & 2 secs, ~400kb 
-            a5 = loadSound('https://www.dl.dropboxusercontent.com/s/xhqseodrgfdt0i2/a5.mp3')
-            b5 = loadSound('https://www.dl.dropboxusercontent.com/s/d2g6bsst7ywg1lo/b5.mp3')
-            c5 = loadSound('https://www.dl.dropboxusercontent.com/s/ccaswpookmdk3n4/c5.mp3')
-            c6 = loadSound('https://www.dl.dropboxusercontent.com/s/ih2tk20jhui85x8/c6.mp3')
-            d5 = loadSound('https://www.dl.dropboxusercontent.com/s/scxp2howqhpkcg6/d5.mp3')
-            e5 = loadSound('https://www.dl.dropboxusercontent.com/s/ie7vbqzllol7k1z/e5.mp3')
-            f5 = loadSound('https://www.dl.dropboxusercontent.com/s/0f6ob8f07wtbdoz/f5.mp3')
-            g5 = loadSound('https://www.dl.dropboxusercontent.com/s/8xngpox41qa102g/g5.mp3')
-            d6 = loadSound('https://www.dl.dropboxusercontent.com/s/nvpy274mq1hknum/d6.mp3')
-            e6 = loadSound('https://www.dl.dropboxusercontent.com/s/ds6ggo0t9nipx1e/e6.mp3')
-            f6 = loadSound('https://www.dl.dropboxusercontent.com/s/jed4zmy277hp1c6/f6.mp3')
-            g6 = loadSound('https://www.dl.dropboxusercontent.com/s/56sb3mpn65du4hn/g6.mp3')
+    function preload() {
+      // Basically for each note's sound file, tell p5js to load it from that url as a playable sound and then replace that property.
+      for (const key in keys) {
+        keys[key].sound = loadSound(keys[key].sound);
+        keys[key].currentColor = color(...keys[key].currentColor); // Spread operator to use the array of rgb as parameters
+      }
+    }
 
-            // create drop down menu with p5.dom
-            menu = createSelect()
-            menu.position(20, 7486) // y position set to 7526 as the code comes before canvas for some reason
-            menu.option("8 keys")
-            menu.option("12 keys")
-        }
+    function setup() {
+      createCanvas(850, 775);
+      background(150);
+    }
 
-        function setup() {
-            createCanvas(850, 775);
-            background(150)
-            keyHighlightC5 = color(255, 0, 0)
-            keyHighlightD5 = color(255, 0, 0)
-            keyHighlightE5 = color(255, 0, 0)
-            keyHighlightF5 = color(255, 0, 0)
-            keyHighlightG5 = color(255, 0, 0)
-            keyHighlightA5 = color(255, 0, 0)
-            keyHighlightB5 = color(255, 0, 0)
-            keyHighlightC6 = color(255, 0, 0)
-            keyHighlightD6 = color(255, 0, 0)
-            keyHighlightE6 = color(255, 0, 0)
-            keyHighlightF6 = color(255, 0, 0)
-            keyHighlightG6 = color(255, 0, 0)
-        }
+    function draw() {
+      drawKeys();
+    }
 
-        function draw() {
-            // yahia dont delete the triple equals, normal == operator messes it up
-            // not sure if it has anything to do with some string conversion thingy
-            if (menu.value() === "8 keys") {
-                background(150)
-                textSize(15)
-                text("Modes", 23, 735)
-                textSize(23)
-                xylo8key();
-            }
-            else if (menu.value() === "12 keys") {
-                xylo12key()
-            }
-        }
+    function drawKeys() {
+      const validKeys = Object.keys(keys);
+      const len = validKeys.length;
 
-        function keyPressed() {
-            // 8 key mode
-            if (keyCode == 87) { // key w
-                a5.play();
-                keyHighlightA5 = color(255, 255, 0)
-            }
-            if (keyCode == 65) { // key a
-                b5.play()
-                keyHighlightB5 = color(255, 255, 0)
-            }
-            if (keyCode == 83) { // key s
-                c5.play()
-                keyHighlightC5 = color(255, 255, 0)
-            }
-            if (keyCode == 68) { // key d
-                c6.play()
-                keyHighlightC6 = color(255, 255, 0)
-            }
-            if (keyCode == 32) { // space
-                d5.play()
-                keyHighlightD5 = color(255, 255, 0)
-            }
+      for (let i = 0; i < len; i++) {
+        const coords = [(15 + i * (width / len)), 50, 45, 650 - (i * 50)]
+        fill(keys[validKeys[i]].currentColor);
+        rect(...coords); // Draw the rectangles with the coordinates specified in the coords array
+        fill(0);
+        textSize(20);
+        text(keys[validKeys[i]].note.toUpperCase(), coords[0] + 11, coords[3] + 15);
+      }
+    }
 
-            if (keyCode == 39) { // right arrow
-                e5.play()
-                keyHighlightE5 = color(255, 255, 0)
-            }
+    function keyPressed() {
+      if (keys[keyCode] !== undefined) { // If the key pressed is a valid note, then play the sound and highlight the key.
+        keys[keyCode].sound.play();
+        keys[keyCode].currentColor = [255, 255, 0];
+      }
+    }
 
-            if (keyCode == 38) { // up arrow
-                f5.play()
-                keyHighlightF5 = color(255, 255, 0)
-            }
-
-            if (keyCode == 71) { // key G
-                g5.play()
-                keyHighlightG5 = color(255, 255, 0)
-            }
-
-            // 12 key mode
-            if (menu.value() === "12 keys") {
-                if (keyCode == 37) { // left arrow
-                    d6.play()
-                    keyHighlightD6 = color(255, 255, 0)
-                }
-                if (keyCode == 40) { // down arrow
-                    e6.play()
-                    keyHighlightE6 = color(255, 255, 0)
-                }
-                if (keyCode == 70) { // key F
-                    f6.play()
-                    keyHighlightF6 = color(255, 255, 0)
-                }
-            }
-            else {
-                return
-            }
-        }
-
-        function keyReleased() {
-            if (keyCode == 87) { // key w
-                keyHighlightA5 = color(255, 0, 0)
-            }
-            if (keyCode == 65) { // key a
-                keyHighlightB5 = color(255, 0, 0)
-            }
-            if (keyCode == 83) { // key s
-                keyHighlightC5 = color(255, 0, 0)
-            }
-            if (keyCode == 68) { // key d
-                keyHighlightC6 = color(255, 0, 0)
-            }
-            if (keyCode == 32) { // space
-                keyHighlightD5 = color(255, 0, 0)
-            }
-            if (keyCode == 37) { // left arrow
-                keyHighlightD6 = color(255, 0, 0)
-            }
-            if (keyCode == 39) { // right arrow
-                keyHighlightE5 = color(255, 0, 0)
-            }
-            if (keyCode == 40) { // down arrow
-                keyHighlightE6 = color(255, 0, 0)
-            }
-            if (keyCode == 38) { // up arrow
-                keyHighlightF5 = color(255, 0, 0)
-            }
-            if (keyCode == 70) { // key F
-                keyHighlightF6 = color(255, 0, 0)
-            }
-            if (keyCode == 71) { // key G
-                keyHighlightG5 = color(255, 0, 0)
-            }
-        }
-
-        function mousePressed() {
-            // g6
-            if (menu.value() === "12 keys") {
-                if (mouseButton == LEFT) {
-                    g6.play()
-                    keyHighlightG6 = color(255, 255, 0)
-                }
-            } else {
-                return
-            }
-        }
-
-        function mouseReleased() {
-            if (menu.value() === "12 keys") {
-                keyHighlightG6 = color(255, 0, 0)
-            }
-            else {
-                return
-            }
-        }
-
-        function xylo8key() {
-            const y = 50
-
-            // first key c5
-            fill(keyHighlightC5)
-            rect(40, y, 45, 650)
-
-            fill(0)
-            text("C5", 48, 650)
-
-            // second key d5
-            fill(keyHighlightD5)
-            rect(110, y, 45, 600)
-
-            fill(0)
-            text("D5", 118.5, 620)
-
-            // third key e5
-            fill(keyHighlightE5)
-            rect(180, y, 45, 550)
-
-            fill(0)
-            text("E5", 189, 580)
-
-            // fourth key f5
-            fill(keyHighlightF5)
-            rect(250, y, 45, 500)
-
-            fill(0)
-            text("F5", 260, 530)
-
-            // fifth key g5
-            fill(keyHighlightG5)
-            rect(320, y, 45, 450)
-
-            fill(0)
-            text("G5", 328, 480)
-
-            // sixth key a5
-            fill(keyHighlightA5)
-            rect(390, y, 45, 400)
-
-            fill(0)
-            text("A5", 400.5, 430)
-
-            // seventh key b5
-            fill(keyHighlightB5)
-            rect(460, y, 45, 350)
-
-            fill(0)
-            text("B5", 470, 380)
-
-            // eigth key c6
-            fill(keyHighlightC6)
-            rect(520, y, 45, 300)
-
-            fill(0)
-            text("C6", 530, 330)
-        }
-
-        function xylo12key() {
-            const y = 50
-
-            // first key c5
-            fill(keyHighlightC5)
-            rect(40, y, 45, 650)
-
-            fill(0)
-            text("C5", 48, 650)
-
-            // second key d5
-            fill(keyHighlightD5)
-            rect(110, y, 45, 600)
-
-            fill(0)
-            text("D5", 118.5, 620)
-
-            // third key e5
-            fill(keyHighlightE5)
-            rect(180, y, 45, 550)
-
-            fill(0)
-            text("E5", 189, 580)
-
-            // fourth key f5
-            fill(keyHighlightF5)
-            rect(250, y, 45, 500)
-
-            fill(0)
-            text("F5", 260, 530)
-
-            // fifth key g5
-            fill(keyHighlightG5)
-            rect(320, y, 45, 450)
-
-            fill(0)
-            text("G5", 328, 480)
-
-            // sixth key a5
-            fill(keyHighlightA5)
-            rect(390, y, 45, 400)
-
-            fill(0)
-            text("A5", 400.5, 430)
-
-            // seventh key b5
-            fill(keyHighlightB5)
-            rect(460, y, 45, 350)
-
-            fill(0)
-            text("B5", 470, 380)
-
-            // eigth key c6
-            fill(keyHighlightC6)
-            rect(520, y, 45, 300)
-
-            fill(0)
-            text("C6", 530, 330)
-
-            // d6 - g6 disabled only for 8 keys
-            // ninth key d6
-            fill(keyHighlightD6)
-            rect(580, y, 45, 250)
-
-            fill(0)
-            text("D6", 589, 280)
-
-            // tenth key e6
-            fill(keyHighlightE6)
-            rect(640, y, 45, 200)
-
-            fill(0)
-            text("E6", 650, 230)
-
-            // eleventh key f6
-            fill(keyHighlightF6)
-            rect(700, y, 45, 150)
-
-            fill(0)
-            text("F6", 711, 180)
-
-            // twelvth key g6
-            fill(keyHighlightG6)
-            rect(760, y, 45, 100)
-
-            fill(0)
-            text("G6", 768, 130)
-        }
-    </script>
+    function keyReleased() {
+      if (keys[keyCode] !== undefined) keys[keyCode].currentColor = [255, 0, 0];
+    }
+  </script>
 </head>
 
 <body>
-    <div id="code" class="container-fluid">
-        <script src="https://gist-it.appspot.com/github/alexy4744/p5js/blob/master/MAKEY-XYLO.html?footer=0"></script>
-    </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script>
-        $(window).bind("load", function() {
-            $('#code').before($('#defaultCanvas0').remove());
-        });
-    </script>
 </body>
 
 </html>
